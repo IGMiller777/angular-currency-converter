@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CurrencyConverterComponent } from './currency-converter/currency-converter.component';
+import { CurrensyDetailsComponent } from './currensy-details/currensy-details.component';
+import {CurrensyConverterComponent} from "./currensy-converter/currensy-converter.component";
 
 
 
 @NgModule({
-  declarations: [CurrencyConverterComponent],
+  declarations: [
+    CurrensyConverterComponent,
+    CurrensyDetailsComponent],
   imports: [
     CommonModule
   ],
-  exports: [CurrencyConverterComponent]
+  exports: [CurrensyConverterComponent, CurrensyDetailsComponent]
 })
 export class CurrencyConverterModule { }

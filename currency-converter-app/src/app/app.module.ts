@@ -8,6 +8,11 @@ import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {DataService} from "./service/data.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatIconModule} from "@angular/material/icon";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -19,7 +24,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CurrencyConverterModule,
     HttpClientModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

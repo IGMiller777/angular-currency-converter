@@ -128,7 +128,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/cdk@^13.3.9", "@angular/cdk@13.3.9":
+"@angular/cdk@^13.0.0", "@angular/cdk@^13.3.9", "@angular/cdk@13.3.9":
   "integrity" "sha512-XCuCbeuxWFyo3EYrgEYx7eHzwl76vaWcxtWXl00ka8d+WAOtMQ6Tf1D98ybYT5uwF9889fFpXAPw98mVnlo3MA=="
   "resolved" "https://registry.npmjs.org/@angular/cdk/-/cdk-13.3.9.tgz"
   "version" "13.3.9"
@@ -162,7 +162,7 @@
     "symbol-observable" "4.0.0"
     "uuid" "8.3.2"
 
-"@angular/common@^13.0.0 || ^14.0.0-0", "@angular/common@~13.0.0", "@angular/common@13.0.3":
+"@angular/common@^13.0.0", "@angular/common@^13.0.0 || ^14.0.0-0", "@angular/common@~13.0.0", "@angular/common@13.0.3":
   "integrity" "sha512-xxQIQD5rWWHafKRPCgvkWvy53b+QkbJ9yAf3qYTp0gXZJMg/Cx3Ylc8LA2o1kyVJxCI/amXf5k4rr1S9yU7zxw=="
   "resolved" "https://registry.npmjs.org/@angular/common/-/common-13.0.3.tgz"
   "version" "13.0.3"
@@ -193,10 +193,16 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/core@^13.0.0 || ^14.0.0-0", "@angular/core@~13.0.0", "@angular/core@13.0.3":
+"@angular/core@^13.0.0", "@angular/core@^13.0.0 || ^14.0.0-0", "@angular/core@~13.0.0", "@angular/core@13.0.3":
   "integrity" "sha512-w8FngZBPrLw9kHftYy824C/wSBtLKCWvGU04qI6V9BCpxedf7cyOIhOzaL+4Pz/rwgvo+0Qn2uM1ssZ2+JUdvQ=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-13.0.3.tgz"
   "version" "13.0.3"
+  dependencies:
+    "tslib" "^2.3.0"
+
+"@angular/flex-layout@github:angular/flex-layout-builds":
+  "resolved" "git+ssh://git@github.com/angular/flex-layout-builds.git#438865552e5142300612e344569058e6469bc466"
+  "version" "13.0.0-beta.38-ee5d93a"
   dependencies:
     "tslib" "^2.3.0"
 
@@ -221,7 +227,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/platform-browser@^13.0.0 || ^14.0.0-0", "@angular/platform-browser@~13.0.0", "@angular/platform-browser@13.0.3":
+"@angular/platform-browser@^13.0.0", "@angular/platform-browser@^13.0.0 || ^14.0.0-0", "@angular/platform-browser@~13.0.0", "@angular/platform-browser@13.0.3":
   "integrity" "sha512-XCeCnsD997Erl4XGNFHIqC9cTkO9uSHdaoDvLuNMsF2kr5V1GOeFkh71CYNmCsWrTj4PFqx9q+ziGgvxM4eeOQ=="
   "resolved" "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-13.0.3.tgz"
   "version" "13.0.3"

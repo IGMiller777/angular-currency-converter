@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CurrencyDateComponent} from "./currency-date.component";
-
+import {MatSliderModule} from "@angular/material/slider";
 
 
 @NgModule({
@@ -9,7 +9,8 @@ import {CurrencyDateComponent} from "./currency-date.component";
     CurrencyDateComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatSliderModule
   ],
   exports: [
     CurrencyDateComponent

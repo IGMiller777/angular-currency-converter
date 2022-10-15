@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CurrencyDateComponent implements OnInit {
 
+  public startDate = new Date();
+  public currentDate:string = this.startDate.toLocaleDateString('en-US');
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.currentDate)
   }
 
 }

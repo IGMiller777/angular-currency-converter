@@ -1,1 +1,10 @@
-<mat-slider min="1" max="100" step="1" value="50"></mat-slider>
+<!--<input [matDatepicker]="myDatepicker">-->
+<!--<mat-datepicker-toggle [for]="myDatepicker"></mat-datepicker-toggle>-->
+<!--<mat-datepicker #myDatepicker></mat-datepicker>-->
+
+
+<mat-form-field>
+  <input matInput [matDatepicker]="picker" [placeholder]="currentDate">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker startView="month" [startAt]="startDate"></mat-datepicker>
+</mat-form-field>

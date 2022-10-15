@@ -1,22 +1,27 @@
 import { Injectable } from '@angular/core';
-import {catchError, Observable, of, retry} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {catchError, Observable, of, retry} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataService {
+export class CurrencyConvertService {
 
   // https://api.getgeoapi.com/v2/currency/list?api_key=491541064e413c945b459e8d015c07dc42d210c4&format=json
   public baseUrl: string = 'https://api.getgeoapi.com/v2/currency/';
   protected userKey: string = 'bf523fb044a11114964daa3d15169f601afc4eca';
-
-  constructor(private http: HttpClient) { }
-  httpOptions = {
+  public httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     })
   }
+
+  constructor(private http: HttpClient) { }
+
+
+
+
+
 
 
   // public getCurrency(): Observable<any> {
@@ -58,8 +63,6 @@ export class DataService {
       })
     )
   }
-
-
 
 
 

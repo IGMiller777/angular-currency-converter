@@ -1,8 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CurrencyDateComponent} from "./currency-date.component";
-import {MatSliderModule} from "@angular/material/slider";
 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+const materialModules = [
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatFormFieldModule,
+  MatInputModule
+];
 
 @NgModule({
   declarations: [
@@ -10,7 +19,7 @@ import {MatSliderModule} from "@angular/material/slider";
   ],
   imports: [
     CommonModule,
-    MatSliderModule
+    ...materialModules
   ],
   exports: [
     CurrencyDateComponent

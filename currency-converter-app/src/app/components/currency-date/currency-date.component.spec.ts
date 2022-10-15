@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CurrensyDetailsComponent } from './currensy-details.component';
+import { CurrencyDateComponent } from './currency-date.component';
 
-describe('CurrensyDetailsComponent', () => {
-  let component: CurrensyDetailsComponent;
-  let fixture: ComponentFixture<CurrensyDetailsComponent>;
+describe('CurrencyDateComponent', () => {
+  let component: CurrencyDateComponent;
+  let fixture: ComponentFixture<CurrencyDateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrensyDetailsComponent ]
+      declarations: [ CurrencyDateComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CurrensyDetailsComponent);
+    fixture = TestBed.createComponent(CurrencyDateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

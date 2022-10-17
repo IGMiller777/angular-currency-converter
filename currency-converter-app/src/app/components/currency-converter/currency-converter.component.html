@@ -2,53 +2,62 @@
   <div class="cur-1">
     <mat-card>
       <mat-card-content>
-        <mat-select [formControl]="dataCtrl" placeholder="Currency" #singleSelect>
+        <mat-select [formControl]="currencyBox1"  [(ngModel)]="selectedCurrency1" (ngModelChange)="convertValue()"
+                    placeholder="Currency"
+                    #singleSelect1>
           <mat-option>
-            <ngx-mat-select-search [formControl]="filterDataCtrl">
+            <ngx-mat-select-search [formControl]="filterCurrency1">
             </ngx-mat-select-search>
           </mat-option>
-          <mat-option *ngFor="let value of filteredData | async" [value]="value.id">
+          <mat-option *ngFor="let value of filteredData1 | async" [value]="value.flagConvert">
             <img src="https://countryflagsapi.com/svg/{{value.flag}}" alt="Andorra flag" width="40" height="40"/>
             {{value.title }} - {{value.fullName}}
           </mat-option>
         </mat-select>
       </mat-card-content>
       <mat-form-field>
-        <mat-label>Amount of Currency</mat-label>
-        <input matInput placeholder="Count" value="" type="number">
+        <mat-label>Amount of Currency 1</mat-label>
+        <input matInput placeholder="Count" value="2" type="number" [(ngModel)]="amountCur1">
       </mat-form-field>
     </mat-card>
   </div>
   <div class="btn-img">
-    <button mat-button>
-      <mat-icon>swap_horiz</mat-icon>
+    <button mat-button (click)="convertValue()">
+      <mat-icon>perm_scan_wifi</mat-icon>
+      Convert
     </button>
+<!--    <button mat-button>-->
+<!--      <mat-icon>swap_horiz</mat-icon>-->
+<!--    </button>-->
   </div>
   <div class="cur-2">
     <mat-card>
       <mat-card-content>
-        <mat-select [formControl]="dataCtrl" placeholder="Currency"#singleSelect>
+        <mat-select [formControl]="currencyBox2"  [(ngModel)]="selectedCurrency2" (ngModelChange)="convertValue()"
+                    placeholder="Currency"
+                    #singleSelect2>
           <mat-option>
-            <ngx-mat-select-search [formControl]="filterDataCtrl">
+            <ngx-mat-select-search [formControl]="filterCurrency2">
             </ngx-mat-select-search>
           </mat-option>
-          <mat-option *ngFor="let value of filteredData | async" [value]="value.id">
+          <mat-option *ngFor="let value of filteredData2 | async" [value]="value.flagConvert">
             <img src="https://countryflagsapi.com/svg/{{value.flag}}" alt="Andorra flag" width="40" height="40"/>
             {{value.title }} - {{value.fullName}}
           </mat-option>
         </mat-select>
       </mat-card-content>
       <mat-form-field>
-        <mat-label>Amount of Currency</mat-label>
+        <mat-label>Amount of Currency 2</mat-label>
         <input matInput placeholder="Count" value="" type="number">
       </mat-form-field>
     </mat-card>
   </div>
 </div>
-<div class="check-btn">
-  <button mat-button>
-    <mat-icon>perm_scan_wifi</mat-icon>
-  </button>
-</div>
+<!--<div class="check-btn">-->
+<!--  <button mat-button>-->
+<!--    <mat-icon>perm_scan_wifi</mat-icon>-->
+<!--    Convert-->
+<!--  </button>-->
+<!--</div>-->
 
 

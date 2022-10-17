@@ -16,25 +16,33 @@ import {FormControl} from "@angular/forms";
 })
 export class CurrencyConverterComponent implements OnInit, OnDestroy {
   title = 'angular-mat-select-app';
-
   selected: string | undefined;
+   public currencyNames!:any;
 
-  currencies = [
-    { value: 'us', text: 'U.S. Dollar $' },
-    { value: 'euro', text: 'Euro €' },
-    { value: 'yen', text: 'Japanese Yen ¥' },
-    { value: 'pound', text: 'Pounds £' },
-    { value: 'inr', text: 'Indian Rupee ₹' }
-  ];
+  // Code Refactoring
+  // 2 formGroups
+  // FormContolr on Input
+  // Add validation on the value with errors
 
 
-  public currencyNames!:any;
+  //Control 1
+  public selectedCurrency1!: string;
+  public amountCur1!: number;
+  public dataCurrency1: any = [];
+  public currencyBox1: FormControl = new FormControl();
+  public filterCurrency1: FormControl = new FormControl();
+  public filteredData1: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  @ViewChild('single-select', {static: true}) singleSelect1!: MatSelect;
 
-  public dataModel: any = [];
-  public dataCtrl: FormControl = new FormControl();
-  public filterDataCtrl: FormControl = new FormControl();
-  public filteredData: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
-  @ViewChild('single-select', {static: true}) singleSelect!: MatSelect;
+  //Control 2
+  public selectedCurrency2!: string;
+  public amountCur!: number;
+  public dataCurrency2: any = [];
+  public currencyBox2: FormControl = new FormControl();
+  public filterCurrency2: FormControl = new FormControl();
+  public filteredData2: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  @ViewChild('single-select', {static: true}) singleSelect2!: MatSelect;
+
 
   _onDestroy = new Subject<void>();
 
@@ -48,11 +56,16 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getNamesOfCurrencies();
     this.testSubscribeFilteredData();
-    this.filterDataCtrl.valueChanges
+    this.filterCurrency1.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
-        this.filterData();
-    })
+        this.filterData1();
+      })
+    this.filterCurrency2.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterData2();
+      })
   }
 
   ngOnDestroy() {
@@ -60,22 +73,47 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
     this._onDestroy.complete();
   }
 
-  filterData(){
-    if(!this.dataModel) return;
-    let search = this.filterDataCtrl.value;
+  convertValue() {
+    console.log(this.selectedCurrency1, this.amountCur1)
+    // console.log(this.selectedCurrency2)
+  }
+
+  filterData1(){
+    if(!this.dataCurrency1) return;
+    let search = this.filterCurrency1.value;
     if(!search) {
-      this.filteredData.next(this.dataModel.slice());
+      this.filteredData1.next(this.dataCurrency1.slice());
       return;
     }
     else {
       search = search.toLowerCase();
     }
-    this.filteredData.next(
-      this.dataModel.filter(
-        (item: any) => item.title.toLowerCase().indexOf(search) > -1
-      )
+    const filteredCur = this.dataCurrency1.filter(
+      (item: any) => {
+        const result = item.title.toLowerCase().indexOf(search) > -1;
+        return result
+      }
     )
+    this.filteredData1.next(filteredCur)
+  }
 
+  filterData2(){
+    if(!this.dataCurrency2) return;
+    let search = this.filterCurrency2.value;
+    if(!search) {
+      this.filteredData1.next(this.dataCurrency2.slice());
+      return;
+    }
+    else {
+      search = search.toLowerCase();
+    }
+    const filteredCur = this.dataCurrency2.filter(
+      (item: any) => {
+        const result = item.title.toLowerCase().indexOf(search) > -1;
+        return result
+      }
+    )
+    this.filteredData2.next(filteredCur)
   }
 
 
@@ -84,22 +122,25 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
       this.currencyNames = res.currencies;
       const keys = Object.keys(this.currencyNames)
       keys.forEach((key: any, index:number) => {
-        this.dataModel.push({
+        this.dataCurrency1.push({
           id: index,
           title: key,
           flag: key.slice(0,2).toLowerCase(),
+          flagConvert: key.slice(0,3).toUpperCase(),
           fullName: this.currencyNames[key],
           image: 'https://countryflagsapi.com/svg/' + key.slice(0,2).toLowerCase()
         });
-        return this.dataModel;
+        this.dataCurrency2 = [...this.dataCurrency1];
+        return (this.dataCurrency1, this.dataCurrency2);
       })
-      this.filteredData.next(this.dataModel.slice());
+      this.filteredData1.next(this.dataCurrency1.slice());
+      this.filteredData2.next(this.dataCurrency2.slice());
     })
   }
 
   testSubscribeFilteredData() {
-    this.filteredData.subscribe(data => {
-      console.log('Subscribed filteredData', data[0]);
+    this.filteredData1.subscribe(data => {
+      // console.log('Subscribed filteredData1', data[0]);
     });
   }
 }

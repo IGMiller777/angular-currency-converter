@@ -16,8 +16,8 @@ export class FlagsApiService {
     return this.http.get<any>(this.urlCurrencyNames).pipe(
       retry(3),
       catchError(error => {
-          console.log(error);
-          return of( null)
+        console.log(error);
+        return of( null)
         }
       )
     )

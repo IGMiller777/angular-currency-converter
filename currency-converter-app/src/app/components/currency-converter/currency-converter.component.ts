@@ -16,25 +16,17 @@ import {FormControl} from "@angular/forms";
 })
 export class CurrencyConverterComponent implements OnInit, OnDestroy {
   title = 'angular-mat-select-app';
-
   selected: string | undefined;
-
-  currencies = [
-    { value: 'us', text: 'U.S. Dollar $' },
-    { value: 'euro', text: 'Euro €' },
-    { value: 'yen', text: 'Japanese Yen ¥' },
-    { value: 'pound', text: 'Pounds £' },
-    { value: 'inr', text: 'Indian Rupee ₹' }
-  ];
+   public currencyNames!:any;
 
 
-  public currencyNames!:any;
-
-  public dataModel: any = [];
-  public dataCtrl: FormControl = new FormControl();
-  public filterDataCtrl: FormControl = new FormControl();
-  public filteredData: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
-  @ViewChild('single-select', {static: true}) singleSelect!: MatSelect;
+  //Control 1
+  public selectedCurrency1!: string;
+  public dataCurrency1: any = [];
+  public currencyBox1: FormControl = new FormControl();
+  public filterCurrency1: FormControl = new FormControl();
+  public filteredData1: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+  @ViewChild('single-select', {static: true}) singleSelect1!: MatSelect;
 
   _onDestroy = new Subject<void>();
 
@@ -48,7 +40,7 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getNamesOfCurrencies();
     this.testSubscribeFilteredData();
-    this.filterDataCtrl.valueChanges
+    this.filterCurrency1.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
         this.filterData();
@@ -60,46 +52,52 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
     this._onDestroy.complete();
   }
 
+  convertValue() {
+    console.log(this.selectedCurrency1)
+  }
+
   filterData(){
-    if(!this.dataModel) return;
-    let search = this.filterDataCtrl.value;
+    if(!this.dataCurrency1) return;
+    let search = this.filterCurrency1.value;
     if(!search) {
-      this.filteredData.next(this.dataModel.slice());
+      this.filteredData1.next(this.dataCurrency1.slice());
       return;
     }
     else {
       search = search.toLowerCase();
     }
-    this.filteredData.next(
-      this.dataModel.filter(
-        (item: any) => item.title.toLowerCase().indexOf(search) > -1
-      )
+    const filteredCur = this.dataCurrency1.filter(
+      (item: any) => {
+        const result = item.title.toLowerCase().indexOf(search) > -1;
+        return result
+      }
     )
-
+    console.log(filteredCur)
+    this.filteredData1.next(filteredCur)
   }
-
 
   getNamesOfCurrencies() {
     return this.currencyFlagsService.getCurrencyNames().subscribe(res => {
       this.currencyNames = res.currencies;
       const keys = Object.keys(this.currencyNames)
       keys.forEach((key: any, index:number) => {
-        this.dataModel.push({
+        this.dataCurrency1.push({
           id: index,
           title: key,
           flag: key.slice(0,2).toLowerCase(),
+          flagConvert: key.slice(0,3).toUpperCase(),
           fullName: this.currencyNames[key],
           image: 'https://countryflagsapi.com/svg/' + key.slice(0,2).toLowerCase()
         });
-        return this.dataModel;
+        return this.dataCurrency1;
       })
-      this.filteredData.next(this.dataModel.slice());
+      this.filteredData1.next(this.dataCurrency1.slice());
     })
   }
 
   testSubscribeFilteredData() {
-    this.filteredData.subscribe(data => {
-      console.log('Subscribed filteredData', data[0]);
+    this.filteredData1.subscribe(data => {
+      // console.log('Subscribed filteredData1', data[0]);
     });
   }
 }

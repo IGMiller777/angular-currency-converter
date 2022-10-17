@@ -1,1 +1,54 @@
-<p>currency-converter works!</p>
+<div class="wrapper-card">
+  <div class="cur-1">
+    <mat-card>
+      <mat-card-content>
+        <mat-select [formControl]="dataCtrl" placeholder="Currency" #singleSelect>
+          <mat-option>
+            <ngx-mat-select-search [formControl]="filterDataCtrl">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let value of filteredData | async" [value]="value.id">
+            <img src="https://countryflagsapi.com/svg/{{value.flag}}" alt="Andorra flag" width="40" height="40"/>
+            {{value.title }} - {{value.fullName}}
+          </mat-option>
+        </mat-select>
+      </mat-card-content>
+      <mat-form-field>
+        <mat-label>Amount of Currency</mat-label>
+        <input matInput placeholder="Count" value="" type="number">
+      </mat-form-field>
+    </mat-card>
+  </div>
+  <div class="btn-img">
+    <button mat-button>
+      <mat-icon>swap_horiz</mat-icon>
+    </button>
+  </div>
+  <div class="cur-2">
+    <mat-card>
+      <mat-card-content>
+        <mat-select [formControl]="dataCtrl" placeholder="Currency"#singleSelect>
+          <mat-option>
+            <ngx-mat-select-search [formControl]="filterDataCtrl">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let value of filteredData | async" [value]="value.id">
+            <img src="https://countryflagsapi.com/svg/{{value.flag}}" alt="Andorra flag" width="40" height="40"/>
+            {{value.title }} - {{value.fullName}}
+          </mat-option>
+        </mat-select>
+      </mat-card-content>
+      <mat-form-field>
+        <mat-label>Amount of Currency</mat-label>
+        <input matInput placeholder="Count" value="" type="number">
+      </mat-form-field>
+    </mat-card>
+  </div>
+</div>
+<div class="check-btn">
+  <button mat-button>
+    <mat-icon>perm_scan_wifi</mat-icon>
+  </button>
+</div>
+
+

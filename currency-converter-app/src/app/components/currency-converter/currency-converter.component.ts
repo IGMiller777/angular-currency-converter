@@ -17,31 +17,31 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
   selected: string | undefined;
    public currencyNames!:any;
 
-  //Control 1
-
-  public listOfCountries: any = []; // List of Flags
-  public countryControl: FormControl = new FormControl(); //Control for selected
-  public filterForCountryControl: FormControl = new FormControl(); //Control for selected
-  public filteredCountries: ReplaySubject<any[]> = new ReplaySubject<any[]>(1)
-  @ViewChild('singleSelect', {static: true}) singleSelect!: MatSelect;
+   public listOfCountries: any = [];
   protected _onDestroy = new Subject<void>();
 
+  //Control 1
+  public countryControl1: FormControl = new FormControl();
+  public filterForCountryControl1: FormControl = new FormControl();
+  public filteredCountries1: ReplaySubject<any[]> = new ReplaySubject<any[]>(1)
+  @ViewChild('singleSelectFirst') singleSelectFirst!: MatSelect;
+  public amountCurrency1: FormControl =  new FormControl("");
 
-  public formCurrency!: FormGroup;
+  //Control 2
+  public countryControl2: FormControl = new FormControl();
+  public filterForCountryControl2: FormControl = new FormControl();
+  public filteredCountries2: ReplaySubject<any[]> = new ReplaySubject<any[]>(1)
+  @ViewChild('singleSelectSecond', {static: true}) singleSelectSecond!: MatSelect;
+  public amountCurrency2: FormControl =  new FormControl("");
+
+  checkValue: FormControl = new FormControl('');
+
+
+
+
   constructor(private currencyFlagsService: FlagsApiService,
               private currencyConvertService: CurrencyApiService,
-              private http: HttpClient,
-              private _fb: FormBuilder) {
-
-    this.formCurrency = this._fb.group({
-      selectOption1: new FormControl('', [
-        Validators.required,
-      ]),
-      amountCurrency: new FormControl('', [
-        Validators.required,
-        Validators.minLength(1)
-      ])
-    })
+              private http: HttpClient) {
 
   }
 
@@ -60,44 +60,83 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
   }
 
   setInitialValues() {
-    this.countryControl.setValue(this.listOfCountries);
-    this.filteredCountries.next(this.listOfCountries.slice());
-    this.filterForCountryControl.valueChanges
+    this.countryControl1.setValue(this.listOfCountries);
+    this.countryControl2.setValue(this.listOfCountries);
+
+    this.filteredCountries1.next(this.listOfCountries.slice());
+    this.filteredCountries2.next(this.listOfCountries.slice());
+
+    this.filterForCountryControl1.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
-        this.filterCountries();
+        this.filterCountries1();
+      })
+
+    this.filterForCountryControl2.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterCountries2();
       })
   }
 
-  convertValue() {
+  check() {
+    const currencyFirst = this.singleSelectFirst.ngControl.control?.value.title;
+    const currencySecond = this.singleSelectSecond.ngControl.control?.value.title;
+    const amount1 = this.amountCurrency1.value;
+    const amount2 = this.amountCurrency2.value;
+    console.log(currencyFirst, amount1, 'One')
+    console.log(currencySecond, amount2, 'TWO')
+
+  }
+
+  convertValue(value: any) {
+
+    // console.log(this.amountCurrency1)
     // this.formCurrency.controls['selectOption1'].setValue()
-    console.log(this.formCurrency)
     // console.log(this.selectedCurrency2)
   }
 
-  protected filterCountries() {
+  protected filterCountries1() {
     if (!this.listOfCountries) {
       return;
     }
-    let search = this.filterForCountryControl.value;
+    let search = this.filterForCountryControl1.value;
     if (!search) {
-      this.filteredCountries.next(this.listOfCountries.slice());
+      this.filteredCountries1.next(this.listOfCountries.slice());
       return;
     } else {
       search = search.toLowerCase();
-      console.log(search, 'KK')
     }
     const newFilterCountre = this.listOfCountries.filter(
       (item: any) => {
-        const result = item.title.toLowerCase().indexOf(search) > -1;
+        const result = item.searchName.toLowerCase().indexOf(search) > -1;
         return result
       })
-    this.filteredCountries.next(newFilterCountre)
+    this.filteredCountries1.next(newFilterCountre)
+  }
+
+  protected filterCountries2() {
+    if (!this.listOfCountries) {
+      return;
+    }
+    let search = this.filterForCountryControl2.value;
+    if (!search) {
+      this.filteredCountries2.next(this.listOfCountries.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    const newFilterCountre = this.listOfCountries.filter(
+      (item: any) => {
+        const result = item.searchName.toLowerCase().indexOf(search) > -1;
+        return result
+      })
+    this.filteredCountries2.next(newFilterCountre)
   }
 
   protected setInitialValue () {
-    this.filteredCountries.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
-      this.singleSelect.compareWith= (a: any, b :any) => a && b && a.id === b.id
+    this.filteredCountries1.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
+      this.singleSelectFirst.compareWith= (a: any, b :any) => a && b && a.id === b.id
     })
   }
 
@@ -109,15 +148,17 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
         this.listOfCountries.push({
           id: index,
           title: key,
+          fullName: this.currencyNames[key],
+          searchName: `${key} ${this.currencyNames[key]}`,
           flag: key.slice(0,2).toLowerCase(),
           flagConvert: key.slice(0,3).toUpperCase(),
-          fullName: this.currencyNames[key],
           image: 'https://countryflagsapi.com/svg/' + key.slice(0,2).toLowerCase()
         });
-        this.setInitialValues();
         return this.listOfCountries
       })
+      this.setInitialValues();
     })
+
   }
 
 }

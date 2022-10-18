@@ -1,18 +1,16 @@
 <div class="wrapper-card">
   <div class="cur-1">
-    <form [formGroup]="formCurrency">
       <mat-card style="border: 2px solid red">
         <mat-card-content>
-            <mat-select
-                [formControl]="countryControl"
+          <mat-select
+                [formControl]="countryControl1"
                 placeholder="Currency"
-                #singleSelect>
-<!--              formControlName="selectOption1"-->
-                <mat-option >
-                  <ngx-mat-select-search [formControl]="filterForCountryControl" >
+                #singleSelectFirst>
+              <mat-option>
+                  <ngx-mat-select-search [formControl]="filterForCountryControl1" >
                   </ngx-mat-select-search>
                 </mat-option>
-                <mat-option *ngFor="let country of filteredCountries | async" [value]="country.flagConvert">
+                <mat-option *ngFor="let country of filteredCountries1 | async" [value]="country">
                   <img src="https://countryflagsapi.com/svg/{{country.flag}}" alt="Andorra flag" width="40" height="40"/>
                   {{country.title }} - {{country.fullName}}
                 </mat-option>
@@ -20,14 +18,15 @@
         </mat-card-content>
         <mat-form-field>
           <mat-label>Amount of Currency 1</mat-label>
-          <input matInput placeholder="Count" value="2" formControlName="amountCurrency"
+          <input (keyup)="convertValue($event)"
+                 [formControl]="amountCurrency1"
+                 matInput placeholder="Count" value=""
                  type="number">
         </mat-form-field>
       </mat-card>
-    </form>
   </div>
   <div class="btn-img">
-    <button mat-button (click)="convertValue()">
+    <button mat-button (click)="check()">
       <mat-icon>perm_scan_wifi</mat-icon>
       Convert
     </button>
@@ -36,27 +35,34 @@
 <!--    </button>-->
   </div>
   <div class="cur-2">
-<!--    <mat-card>-->
-<!--      <mat-card-content>-->
-<!--        <mat-select [formControl]="currencyBox2"  [(ngModel)]="selectedCurrency2" (ngModelChange)="convertValue()"-->
-<!--                    placeholder="Currency"-->
-<!--                    #singleSelect2>-->
-<!--          <mat-option>-->
-<!--            <ngx-mat-select-search [formControl]="filterCurrency2">-->
-<!--            </ngx-mat-select-search>-->
-<!--          </mat-option>-->
-<!--          <mat-option *ngFor="let value of filteredData2 | async" [value]="value.flagConvert">-->
-<!--            <img src="https://countryflagsapi.com/svg/{{value.flag}}" alt="Andorra flag" width="40" height="40"/>-->
-<!--            {{value.title }} - {{value.fullName}}-->
-<!--          </mat-option>-->
-<!--        </mat-select>-->
-<!--      </mat-card-content>-->
-<!--      <mat-form-field>-->
-<!--        <mat-label>Amount of Currency 2</mat-label>-->
-<!--        <input matInput placeholder="Count" value="" type="number">-->
-<!--      </mat-form-field>-->
-<!--    </mat-card>-->
+    <mat-card style="border: 2px solid red">
+      <mat-card-content>
+        <mat-select
+          [formControl]="countryControl2"
+          placeholder="Currency"
+          #singleSelectSecond>
+          <mat-option >
+            <ngx-mat-select-search [formControl]="filterForCountryControl2" >
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let country of filteredCountries2 | async" [value]="country">
+            <img src="https://countryflagsapi.com/svg/{{country.flag}}" alt="Andorra flag" width="40" height="40"/>
+            {{country.title }} - {{country.fullName}}
+          </mat-option>
+        </mat-select>
+      </mat-card-content>
+      <br>------------------
+      <br>
+      <mat-form-field>
+        <mat-label>Amount of Currency 1</mat-label>
+        <input (keyup)="convertValue($event)"
+               [formControl]="amountCurrency2"
+               matInput placeholder="Count" value=""
+               type="number">
+      </mat-form-field>
+    </mat-card>
   </div>
+
 </div>
 <!--<div class="check-btn">-->
 <!--  <button mat-button>-->

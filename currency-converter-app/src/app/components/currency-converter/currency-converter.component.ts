@@ -1,9 +1,21 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FlagsApiService} from "../../services/flags-api.service";
 import {CurrencyApiService} from "../../services/currency-api.service";
 import {HttpClient} from "@angular/common/http";
 import { MatSelect } from '@angular/material/select';
-import {ReplaySubject, Subject, take} from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  fromEvent,
+  map,
+  Observable,
+  Observer,
+  ReplaySubject,
+  Subject,
+  take
+} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
@@ -15,28 +27,34 @@ import {Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/fo
 export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'angular-mat-select-app';
   selected: string | undefined;
-   public currencyNames!:any;
 
-   public listOfCountries: any = [];
+  public currencyNames!:any;
+  public listOfCountries: any = [];
   protected _onDestroy = new Subject<void>();
 
   //Control 1
   public countryControl1: FormControl = new FormControl();
   public filterForCountryControl1: FormControl = new FormControl();
   public filteredCountries1: ReplaySubject<any[]> = new ReplaySubject<any[]>(1)
-  @ViewChild('singleSelectFirst') singleSelectFirst!: MatSelect;
+  @ViewChild('selectFlagOne') selectFlagOne!: MatSelect;
+  @ViewChild('currencyInputOne', {static: true}) currencyInputOne!: ElementRef;
+
+  public currentValueOne: BehaviorSubject<any> = new BehaviorSubject<any>(0);
   public amountCurrency1: FormControl =  new FormControl("");
 
   //Control 2
   public countryControl2: FormControl = new FormControl();
   public filterForCountryControl2: FormControl = new FormControl();
   public filteredCountries2: ReplaySubject<any[]> = new ReplaySubject<any[]>(1)
-  @ViewChild('singleSelectSecond', {static: true}) singleSelectSecond!: MatSelect;
+  @ViewChild('selectFlagTwo', {static: true}) selectFlagTwo!: MatSelect;
+  @ViewChild('currencyInputTwo', {static: true}) currencyInputTwo!: ElementRef;
+
   public amountCurrency2: FormControl =  new FormControl("");
 
   checkValue: FormControl = new FormControl('');
 
 
+  @ViewChild('currensySearchInput', {static: true}) currensySearchInput!: ElementRef
 
 
   constructor(private currencyFlagsService: FlagsApiService,
@@ -48,6 +66,8 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
 
   ngOnInit(): void {
     this.getNamesOfCurrencies();
+    this.convertCurrencyFieldOne();
+
   }
 
   ngAfterViewInit() {
@@ -58,6 +78,44 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
     this._onDestroy.next();
     this._onDestroy.complete();
   }
+
+
+  public convertCurrencyFieldOne() {
+
+    fromEvent(this.currencyInputOne.nativeElement, 'keyup').pipe(
+      map((event: any) => {
+        return event.target.value
+      }),
+      debounceTime(1000),
+      distinctUntilChanged()).subscribe((amount: any) => {
+      const flagOne = this.selectFlagOne.ngControl.control?.value.title;
+      const flagTwo = this.selectFlagTwo.ngControl.control?.value.title;
+      if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
+        console.log('True');
+        this.currencyConvertService.getCurrencyConvert(flagOne, flagTwo,amount).subscribe((res) => {
+            console.log(JSON.stringify(res.rates))
+          }
+        )
+      }
+      //Check another fields
+    })
+
+    // fromEvent(this.currensySearchInput.nativeElement, 'keyup').pipe(
+    //   map((event: any) => {
+    //     console.log(event)
+    //     return event.target.value
+    //   }),
+    //   filter(result => result > 2),
+    //   debounceTime(1000),
+    //   distinctUntilChanged()
+    // ).subscribe((text: any) => {
+    //   console.log(text)
+    //   this.currencyConvertService.getCurrencyConvert().subscribe((res) => {
+    //
+    //   })
+    // })
+}
+
 
   setInitialValues() {
     this.countryControl1.setValue(this.listOfCountries);
@@ -78,24 +136,22 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
         this.filterCountries2();
       })
   }
-
   check() {
-    const currencyFirst = this.singleSelectFirst.ngControl.control?.value.title;
-    const currencySecond = this.singleSelectSecond.ngControl.control?.value.title;
-    const amount1 = this.amountCurrency1.value;
-    const amount2 = this.amountCurrency2.value;
-    console.log(currencyFirst, amount1, 'One')
-    console.log(currencySecond, amount2, 'TWO')
+    const currencyFirst = this.selectFlagOne.ngControl.control?.value.title;
+
+    const currencySecond = this.selectFlagTwo.ngControl.control?.value.title;
+    console.log(currencySecond)
+
+    // const amount1 = this.amountCurrency1.value;
+    // const amount2 = this.amountCurrency2.value;
+
+
+    // console.log(currencyFirst, amount1, 'One')
+    // console.log(currencySecond, amount2, 'TWO')
 
   }
-
   convertValue(value: any) {
-
-    // console.log(this.amountCurrency1)
-    // this.formCurrency.controls['selectOption1'].setValue()
-    // console.log(this.selectedCurrency2)
   }
-
   protected filterCountries1() {
     if (!this.listOfCountries) {
       return;
@@ -114,7 +170,6 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
       })
     this.filteredCountries1.next(newFilterCountre)
   }
-
   protected filterCountries2() {
     if (!this.listOfCountries) {
       return;
@@ -133,11 +188,10 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
       })
     this.filteredCountries2.next(newFilterCountre)
   }
-
   protected setInitialValue () {
-    this.filteredCountries1.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
-      this.singleSelectFirst.compareWith= (a: any, b :any) => a && b && a.id === b.id
-    })
+    // this.filteredCountries1.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
+    //   this.singleSelectFirst.compareWith= (a: any, b :any) => a && b && a.id === b.id
+    // })
   }
 
   getNamesOfCurrencies() {
@@ -162,3 +216,10 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
   }
 
 }
+
+// required
+// Check Currensy - 1
+// Check Currensy - 2
+// AmountCurensy - 1
+//       ||
+// AmountCurrensy 2

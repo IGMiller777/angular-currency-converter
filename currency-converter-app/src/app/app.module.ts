@@ -15,7 +15,7 @@ import {CurrencyDateModule} from "./components/currency-date/currency-date.modul
 import {NgxsModule} from "@ngxs/store";
 import {NgxsLoggerPluginModule} from "@ngxs/logger-plugin";
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import {TutorialState} from "./_store/tutorial.state";
+// import {TutorialState} from "./_store/tutorial.state";
 import { NgxsComponent } from './ngxs/ngxs.component';
 @NgModule({
   declarations: [
@@ -27,8 +27,7 @@ import { NgxsComponent } from './ngxs/ngxs.component';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-
-    NgxsModule.forRoot([TutorialState]),
+    // NgxsModule.forRoot([TutorialState]),
     NgxsLoggerPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule,
     CurrencyConverterModule,

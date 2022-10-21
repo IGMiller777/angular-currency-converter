@@ -3,14 +3,16 @@
       <mat-card style="border: 2px solid red">
         <mat-card-content>
           <mat-select
+                #selectFlagOne
                 [formControl]="countryControl1"
-                placeholder="Currency"
-                #singleSelectFirst>
+                placeholder="Currency">
               <mat-option>
-                  <ngx-mat-select-search [formControl]="filterForCountryControl1" >
+                  <ngx-mat-select-search
+                    [formControl]="filterForCountryControl1" >
                   </ngx-mat-select-search>
                 </mat-option>
-                <mat-option *ngFor="let country of filteredCountries1 | async" [value]="country">
+                <mat-option *ngFor="let country of filteredCountries1 | async"
+                            [value]="country">
                   <img src="https://countryflagsapi.com/svg/{{country.flag}}" alt="Andorra flag" width="40" height="40"/>
                   {{country.title }} - {{country.fullName}}
                 </mat-option>
@@ -18,7 +20,8 @@
         </mat-card-content>
         <mat-form-field>
           <mat-label>Amount of Currency 1</mat-label>
-          <input (keyup)="convertValue($event)"
+          <input #currencyInputOne
+                 (keyup)="convertValue($event)"
                  [formControl]="amountCurrency1"
                  matInput placeholder="Count" value=""
                  type="number">
@@ -38,9 +41,10 @@
     <mat-card style="border: 2px solid red">
       <mat-card-content>
         <mat-select
+          #selectFlagTwo
           [formControl]="countryControl2"
           placeholder="Currency"
-          #singleSelectSecond>
+          >
           <mat-option >
             <ngx-mat-select-search [formControl]="filterForCountryControl2" >
             </ngx-mat-select-search>
@@ -55,7 +59,8 @@
       <br>
       <mat-form-field>
         <mat-label>Amount of Currency 1</mat-label>
-        <input (keyup)="convertValue($event)"
+        <input #currencyInputTwo
+                (keyup)="convertValue($event)"
                [formControl]="amountCurrency2"
                matInput placeholder="Count" value=""
                type="number">
@@ -70,5 +75,6 @@
 <!--    Convert-->
 <!--  </button>-->
 <!--</div>-->
+<input type="text" placeholder="Type any currensy" #currensySearchInput>
 
 

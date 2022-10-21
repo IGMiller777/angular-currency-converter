@@ -41,8 +41,8 @@ export class CurrencyApiService {
     )
   }
 
-  public getCurrencyConvert(): Observable<any>{
-    return this.http.get(`https://api.getgeoapi.com/v2/currency/convert?api_key=491541064e413c945b459e8d015c07dc42d210c4&format=json`).pipe(
+  public getCurrencyConvert(currencyFirst: string, currencySecond: string, amount: number): Observable<any>{
+    return this.http.get(`https://api.getgeoapi.com/v2/currency/convert?api_key=491541064e413c945b459e8d015c07dc42d210c4&&from=${currencyFirst}&to=${currencySecond}&amount=${amount}&format=jsonformat=json`).pipe(
       retry(3),
       catchError(err => {
         console.log(err);

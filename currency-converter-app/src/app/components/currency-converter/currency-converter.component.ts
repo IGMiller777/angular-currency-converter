@@ -114,36 +114,30 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
 
 
 
-
-
-
-
-
-
-
-
-
   public convertCurrencyFieldOne() {
     fromEvent(this.currencyInputOne.nativeElement, 'keyup').pipe(
-      map((event: any) => {
-        return event.target.value
-      }),
-      debounceTime(1000),
-      distinctUntilChanged()).subscribe((amount: any) => {
-      const flagOne = this.selectFlagOne.ngControl.control?.value.title;
-      const flagTwo = this.selectFlagTwo.ngControl.control?.value.title;
-      if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
-        console.log('True');
+      map((event: any) => event.target.value),debounceTime(1000),distinctUntilChanged()
+    ).subscribe((amount: number) => this.convertCurrency(amount, 1))
+  }
+
+  protected convertCurrency(amount: number, controlId: number) {
+    const flagOne = this.selectFlagOne.ngControl.control?.value.title;
+    const flagTwo = this.selectFlagTwo.ngControl.control?.value.title;
+    if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
+      if(controlId == 1) {
         this.currencyConvertService.getCurrencyConvert(flagOne, flagTwo,amount).subscribe((res) => {
             if(res) this.insertData(JSON.stringify(res.rates), flagTwo, 1)
           }
         )
       }
-      else {
-        alert('Please Choose Currency Flag!!!')
-      }
-    })
+
+    }
+    else {
+      alert('Please Choose Currency Flag!!!')
+    }
+
 }
+
   public convertCurrencyFieldTwo() {
     fromEvent(this.currencyInputTwo.nativeElement, 'keyup').pipe(
       map((event: any) => {
@@ -154,7 +148,6 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
       const flagOne = this.selectFlagOne.ngControl.control?.value.title;
       const flagTwo = this.selectFlagTwo.ngControl.control?.value.title;
       if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
-        console.log('True');
         this.currencyConvertService.getCurrencyConvert(flagTwo, flagOne, amount).subscribe((res) => {
             if(res) this.insertData(JSON.stringify(res.rates), flagOne, 2)
           }
@@ -164,16 +157,11 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
         alert('Please Choose Currency Flag!!!')
       }
     })
-}
+  }
   public insertData(data: any, key: any, id: number) {
-    let result = data.split(',')[2].split('"')[3]
-    if(id == 1) {
-      this.amountCurrency2.setValue(result)
-    }
-    if(id == 2) {
-      this.amountCurrency1.setValue(result)
-
-    }
+    let result = data.split(',')[2].split('"')[3];
+    if(id == 1) this.amountCurrency2.setValue(result);
+    if(id == 2) this.amountCurrency1.setValue(result);
   }
 
 
@@ -196,3 +184,5 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
   public convertValue(value: any) {
   }
 }
+
+

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { formatDate} from "@angular/common";
+import {CurrencyApiService} from "../../services/currency-api.service";
 
 @Component({
   selector: 'app-currency-date',
@@ -8,11 +10,26 @@ import { Component, OnInit } from '@angular/core';
 export class CurrencyDateComponent implements OnInit {
 
   public startDate = new Date();
+  public newDate!: string;
+  protected format: string = 'yyyy-MM-dd';
+  protected local: string = 'en-US';
   public currentDate:string = this.startDate.toLocaleDateString('en-US');
-  constructor() { }
+  constructor(private convertService: CurrencyApiService) { }
 
   ngOnInit(): void {
-    console.log(this.currentDate)
+    this.currentDate = formatDate(this.startDate, this.format, this.local);
+    this.convertService.date = this.currentDate
+  }
+
+
+  changeDate(event: any) {
+   this.newDate = event.value;
+   const formattedDate = formatDate(this.newDate, this.format, this.local)
+    if(formattedDate > this.currentDate) {
+        this.currentDate
+      alert('Please, choose date early')
+    }
+    this.convertService.date = formattedDate;
   }
 
 }

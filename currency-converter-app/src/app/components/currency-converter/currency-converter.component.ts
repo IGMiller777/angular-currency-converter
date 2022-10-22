@@ -7,11 +7,8 @@ import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
-  filter,
   fromEvent,
   map,
-  Observable,
-  Observer,
   ReplaySubject,
   Subject,
   take
@@ -67,13 +64,12 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit(): void {
     this.getNamesOfCurrencies();
     this.convertCurrencyFieldOne();
+    this.convertCurrencyFieldTwo();
 
   }
-
   ngAfterViewInit() {
     this.setInitialValue();
   }
-
   ngOnDestroy() {
     this._onDestroy.next();
     this._onDestroy.complete();
@@ -92,22 +88,47 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
       if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
         console.log('True');
         this.currencyConvertService.getCurrencyConvert(flagOne, flagTwo,amount).subscribe((res) => {
-            if(res) this.insertData(JSON.stringify(res.rates), flagTwo)
+            if(res) this.insertData(JSON.stringify(res.rates), flagTwo, 1)
           }
         )
       }
-      //Check another fields
+      else {
+        alert('Please Choose Currency Flag!!!')
+      }
     })
 }
-
-  insertData(data: any, key: any) {
+  public convertCurrencyFieldTwo() {
+    fromEvent(this.currencyInputTwo.nativeElement, 'keyup').pipe(
+      map((event: any) => {
+        return event.target.value
+      }),
+      debounceTime(1000),
+      distinctUntilChanged()).subscribe((amount: any) => {
+      const flagOne = this.selectFlagOne.ngControl.control?.value.title;
+      const flagTwo = this.selectFlagTwo.ngControl.control?.value.title;
+      if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
+        console.log('True');
+        this.currencyConvertService.getCurrencyConvert(flagTwo, flagOne, amount).subscribe((res) => {
+            if(res) this.insertData(JSON.stringify(res.rates), flagOne, 2)
+          }
+        )
+      }
+      else {
+        alert('Please Choose Currency Flag!!!')
+      }
+    })
+}
+  public insertData(data: any, key: any, id: number) {
     let result = data.split(',')[2].split('"')[3]
-    this.amountCurrency2.setValue(result)
-    console.log('Amount', result);
+    if(id == 1) {
+      this.amountCurrency2.setValue(result)
+    }
+    if(id == 2) {
+      this.amountCurrency1.setValue(result)
+
+    }
   }
-
-
-  setInitialValues() {
+  public setInitialValues() {
     this.countryControl1.setValue(this.listOfCountries);
     this.countryControl2.setValue(this.listOfCountries);
 
@@ -126,7 +147,7 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
         this.filterCountries2();
       })
   }
-  check() {
+  public check() {
     const currencyFirst = this.selectFlagOne.ngControl.control?.value.title;
 
     const currencySecond = this.selectFlagTwo.ngControl.control?.value.title;
@@ -140,7 +161,7 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
     // console.log(currencySecond, amount2, 'TWO')
 
   }
-  convertValue(value: any) {
+  public convertValue(value: any) {
   }
   protected filterCountries1() {
     if (!this.listOfCountries) {
@@ -183,8 +204,7 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
     //   this.singleSelectFirst.compareWith= (a: any, b :any) => a && b && a.id === b.id
     // })
   }
-
-  getNamesOfCurrencies() {
+  public getNamesOfCurrencies() {
     return this.currencyFlagsService.getCurrencyNames().subscribe(res => {
       this.currencyNames = res.currencies;
       const keys = Object.keys(this.currencyNames)
@@ -204,7 +224,6 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
     })
 
   }
-
 }
 
 // required

@@ -81,68 +81,35 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
 
   public setInitialValues() {
     this.countryControl1.setValue(this.listOfCountries);
-    console.log('@@==', this.countryControl1)
     this.countryControl2.setValue(this.listOfCountries);
-
     this.filteredCountries1.next(this.listOfCountries.slice());
     this.filteredCountries2.next(this.listOfCountries.slice());
 
     this.filterForCountryControl1.valueChanges
-      .pipe(
-        takeUntil(this._onDestroy),
-        debounceTime(200)
-      )
-      .subscribe(() => {
-        this.filterCountries1();
-      })
+      .pipe(takeUntil(this._onDestroy), debounceTime(200))
+      .subscribe(() => this.filterOfCountries(1, this.filterForCountryControl1.value));
 
     this.filterForCountryControl2.valueChanges
-      .pipe(
-        takeUntil(this._onDestroy),
-        debounceTime(200)
-      )
-      .subscribe(() => {
-        this.filterCountries2();
-      })
+      .pipe(takeUntil(this._onDestroy), debounceTime(200))
+      .subscribe(() => this.filterOfCountries(2, this.filterForCountryControl2.value));
   }
 
-  protected filterCountries1() {
-    if (!this.listOfCountries) {
-      return;
+  protected filterOfCountries(controlId: number, searchText: string) {
+    if (!this.listOfCountries) return
+    if(controlId == 1) {
+      !searchText ? this.filteredCountries1.next(this.listOfCountries.slice()) : searchText = searchText.toLowerCase();
     }
-    let search = this.filterForCountryControl1.value;
-    if (!search) {
-      this.filteredCountries1.next(this.listOfCountries.slice());
-      return;
-    } else {
-      search = search.toLowerCase();
+    if(controlId == 2) {
+      !searchText ? this.filteredCountries2.next(this.listOfCountries.slice()) : searchText = searchText.toLowerCase();
     }
-    const newFilterCountre = this.listOfCountries.filter(
-      (item: any) => {
-        const result = item.searchName.toLowerCase().indexOf(search) > -1;
-        return result
+    const newFilterCountries = this.listOfCountries.filter(
+      (item: IUpdatedList) => {
+        const result = item.searchName.toLowerCase().indexOf(searchText) > -1;
+        return result;
       })
-    this.filteredCountries1.next(newFilterCountre)
+    if(controlId == 1) this.filteredCountries1.next(newFilterCountries);
+    if(controlId == 2) this.filteredCountries2.next(newFilterCountries);
   }
-  protected filterCountries2() {
-    if (!this.listOfCountries) {
-      return;
-    }
-    let search = this.filterForCountryControl2.value;
-    if (!search) {
-      this.filteredCountries2.next(this.listOfCountries.slice());
-      return;
-    } else {
-      search = search.toLowerCase();
-    }
-    const newFilterCountre = this.listOfCountries.filter(
-      (item: any) => {
-        const result = item.searchName.toLowerCase().indexOf(search) > -1;
-        return result
-      })
-    this.filteredCountries2.next(newFilterCountre)
-  }
-
 
 
 

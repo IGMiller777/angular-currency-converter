@@ -1,5 +1,6 @@
 .wrapper-card {
   display: flex;
+  flex-direction: row;
   align-items: center;
 
   .cur-1 {
@@ -8,6 +9,10 @@
   .cur-2 {
     width: 350px;
   }
+}
+
+.wrapper-card.reverse {
+  flex-direction: row-reverse;
 }
 
 .check-btn {

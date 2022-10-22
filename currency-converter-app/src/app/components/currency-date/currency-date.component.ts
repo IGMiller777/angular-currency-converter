@@ -8,7 +8,6 @@ import {CurrencyApiService} from "../../services/currency-api.service";
   styleUrls: ['./currency-date.component.scss']
 })
 export class CurrencyDateComponent implements OnInit {
-
   public startDate = new Date();
   public newDate!: string;
   protected format: string = 'yyyy-MM-dd';
@@ -26,10 +25,11 @@ export class CurrencyDateComponent implements OnInit {
    this.newDate = event.value;
    const formattedDate = formatDate(this.newDate, this.format, this.local)
     if(formattedDate > this.currentDate) {
-        this.currentDate
+      this.currentDate
       alert('Please, choose date early')
     }
     this.convertService.date = formattedDate;
+    this.currentDate = formattedDate
   }
 
 }

@@ -81,7 +81,6 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
 
 
   public convertCurrencyFieldOne() {
-
     fromEvent(this.currencyInputOne.nativeElement, 'keyup').pipe(
       map((event: any) => {
         return event.target.value
@@ -93,28 +92,19 @@ export class CurrencyConverterComponent implements OnInit, AfterViewInit, OnDest
       if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
         console.log('True');
         this.currencyConvertService.getCurrencyConvert(flagOne, flagTwo,amount).subscribe((res) => {
-            console.log(JSON.stringify(res.rates))
+            if(res) this.insertData(JSON.stringify(res.rates), flagTwo)
           }
         )
       }
       //Check another fields
     })
-
-    // fromEvent(this.currensySearchInput.nativeElement, 'keyup').pipe(
-    //   map((event: any) => {
-    //     console.log(event)
-    //     return event.target.value
-    //   }),
-    //   filter(result => result > 2),
-    //   debounceTime(1000),
-    //   distinctUntilChanged()
-    // ).subscribe((text: any) => {
-    //   console.log(text)
-    //   this.currencyConvertService.getCurrencyConvert().subscribe((res) => {
-    //
-    //   })
-    // })
 }
+
+  insertData(data: any, key: any) {
+    let result = data.split(',')[2].split('"')[3]
+    this.amountCurrency2.setValue(result)
+    console.log('Amount', result);
+  }
 
 
   setInitialValues() {

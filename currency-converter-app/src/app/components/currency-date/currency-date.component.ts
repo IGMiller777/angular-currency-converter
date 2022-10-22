@@ -17,19 +17,17 @@ export class CurrencyDateComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentDate = formatDate(this.startDate, this.format, this.local);
-    this.convertService.date = this.currentDate
+    this.convertService.date = this.currentDate;
   }
 
-
-  changeDate(event: any) {
+  public changeDate(event: any) {
    this.newDate = event.value;
-   const formattedDate = formatDate(this.newDate, this.format, this.local)
+   let formattedDate = formatDate(this.newDate, this.format, this.local)
     if(formattedDate > this.currentDate) {
-      this.currentDate
+      formattedDate = this.currentDate;
       alert('Please, choose date early')
     }
     this.convertService.date = formattedDate;
     this.currentDate = formattedDate
   }
-
 }

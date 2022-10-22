@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'currency-converter-app';
+
+  public isReverse: boolean = true;
+
 }

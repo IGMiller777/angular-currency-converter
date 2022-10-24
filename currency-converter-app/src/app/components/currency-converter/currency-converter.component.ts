@@ -3,9 +3,12 @@ import {FlagsApiService} from "../../services/flags-api.service";
 import {CurrencyApiService} from "../../services/currency-api.service";
 import {ICountriesList, ICurrencyConverted, IUpdatedList} from "../../data/interfaces";
 import {MatSelect} from '@angular/material/select';
-import {debounceTime, distinctUntilChanged, fromEvent, map, ReplaySubject, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, fromEvent, map, Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil } from 'rxjs/operators';
 import {FormControl} from "@angular/forms";
+import {Store, Select} from "@ngxs/store";
+import {AppState} from "../../store/app.state";
+import {ConvertCurrency, GetCurrencyFlags} from "../../store/app.action";
 
 @Component({
   selector: 'app-currency-converter',
@@ -32,13 +35,25 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
   @ViewChild('selectFlagTwo', {static: true}) selectFlagTwo!: MatSelect;
   @ViewChild('currencyInputTwo', {static: true}) currencyInputTwo!: ElementRef;
   public amountCurrency2: FormControl =  new FormControl("");
+  //NGXS
+  @Select(AppState.selectFlagsData) flagsList$!: Observable<ICountriesList>;
+  @Select(AppState.selectFlagsData) currencyConvert$!: Observable<ICurrencyConverted>;
+  listOfFlags!: ICountriesList;
+  convertResult!: ICurrencyConverted;
 
-  constructor(private currencyFlagsService: FlagsApiService, private currencyConvertService: CurrencyApiService) {}
+  constructor(private currencyFlagsService: FlagsApiService,
+              private currencyConvertService: CurrencyApiService,
+              private store: Store) {}
 
   ngOnInit(): void {
     this.getNamesOfCurrencies();
     this.convertCurrencyFieldOne();
     this.convertCurrencyFieldTwo();
+
+    this.store.dispatch(new GetCurrencyFlags());
+    this.flagsList$.subscribe((returnFlags) => {
+      this.listOfFlags = returnFlags;
+    })
   }
 
   ngOnDestroy() {
@@ -109,16 +124,24 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
   }
 
   protected convertCurrency(amount: number, controlId: number) {
-    const flagOne = this.selectFlagOne.ngControl.control?.value.title;
-    const flagTwo = this.selectFlagTwo.ngControl.control?.value.title;
+    const flagOne: string = this.selectFlagOne.ngControl.control?.value.title;
+    const flagTwo: string = this.selectFlagTwo.ngControl.control?.value.title;
     if(flagTwo !== undefined && flagOne !== undefined && amount !== 0 || undefined) {
       if(controlId == 1) {
+        this.store.dispatch(new ConvertCurrency(flagOne, flagTwo, amount));
+        this.currencyConvert$.subscribe((returnCurrency: ICurrencyConverted) => {
+          if(Object.keys(returnCurrency).length !== 0) this.convertResult = returnCurrency;
+        })
         this.currencyConvertService.getCurrencyConvert(flagOne, flagTwo,amount).subscribe((res: ICurrencyConverted) => {
             if(res) this.insertData(JSON.stringify(res.rates), flagTwo, 1)
           }
         )
       }
       if(controlId == 2) {
+        this.store.dispatch(new ConvertCurrency(flagTwo, flagOne, amount));
+        this.currencyConvert$.subscribe(returnCurrency => {
+          if(Object.keys(returnCurrency).length !== 0) this.convertResult = returnCurrency;
+        })
         this.currencyConvertService.getCurrencyConvert(flagTwo, flagOne, amount).subscribe((res) => {
             if(res) this.insertData(JSON.stringify(res.rates), flagOne, 2)
           }
@@ -135,6 +158,3 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
     if(id == 2) this.amountCurrency1.setValue(result);
   }
 }
-
-// Notes
-// Add new request when add flag after alert

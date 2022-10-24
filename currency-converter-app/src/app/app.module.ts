@@ -12,6 +12,10 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 import {CurrencyConverterModule} from "./components/currency-converter/currency-converter.module";
 import {CurrencyDateModule} from "./components/currency-date/currency-date.module";
+import {NgxsModule} from "@ngxs/store";
+import {NgxsReduxDevtoolsPluginModule} from "@ngxs/devtools-plugin";
+import {NgxsLoggerPluginModule} from "@ngxs/logger-plugin";
+import {AppState} from "./store/app.state";
 
 @NgModule({
   declarations: [
@@ -21,6 +25,9 @@ import {CurrencyDateModule} from "./components/currency-date/currency-date.modul
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    NgxsModule.forRoot([AppState]),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgxsLoggerPluginModule.forRoot(),
     ReactiveFormsModule,
     CurrencyConverterModule,
     CurrencyDateModule,

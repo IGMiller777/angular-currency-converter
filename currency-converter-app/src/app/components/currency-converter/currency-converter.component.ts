@@ -3,9 +3,12 @@ import {FlagsApiService} from "../../services/flags-api.service";
 import {CurrencyApiService} from "../../services/currency-api.service";
 import {ICountriesList, ICurrencyConverted, IUpdatedList} from "../../data/interfaces";
 import {MatSelect} from '@angular/material/select';
-import {debounceTime, distinctUntilChanged, fromEvent, map, ReplaySubject, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, fromEvent, map, Observable, ReplaySubject, Subject} from 'rxjs';
 import {takeUntil } from 'rxjs/operators';
 import {FormControl} from "@angular/forms";
+import {Store, Select} from "@ngxs/store";
+import {AppState} from "../../store/app.state";
+import {GetCurrencyFlags} from "../../store/app.action";
 
 @Component({
   selector: 'app-currency-converter',
@@ -32,13 +35,21 @@ export class CurrencyConverterComponent implements OnInit, OnDestroy {
   @ViewChild('selectFlagTwo', {static: true}) selectFlagTwo!: MatSelect;
   @ViewChild('currencyInputTwo', {static: true}) currencyInputTwo!: ElementRef;
   public amountCurrency2: FormControl =  new FormControl("");
-
-  constructor(private currencyFlagsService: FlagsApiService, private currencyConvertService: CurrencyApiService) {}
+  //NGXS
+  @Select(AppState.selectFlagsData) flagsList$!: Observable<any>
+  listOfFlags: any[] = [];
+  constructor(private currencyFlagsService: FlagsApiService,
+              private currencyConvertService: CurrencyApiService,
+              private store: Store) {}
 
   ngOnInit(): void {
     this.getNamesOfCurrencies();
     this.convertCurrencyFieldOne();
     this.convertCurrencyFieldTwo();
+    this.store.dispatch(new GetCurrencyFlags());
+    this.flagsList$.subscribe((returnFlags) => {
+      this.listOfFlags = returnFlags;
+    })
   }
 
   ngOnDestroy() {

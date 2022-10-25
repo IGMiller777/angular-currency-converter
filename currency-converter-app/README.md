@@ -1,6 +1,6 @@
 # CurrencyConverterApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.1.
+This project powered by `Angular` version 13.0.1, `Angular Material`, `NGXS` 
 
 # Who to run this Project?
 - Run `npm install` or `yarn install` in your command line 

@@ -1,6 +1,6 @@
 # CurrencyConverterApp
 
-This project powered by `Angular` version 13.0.1, `Angular Material`, `NGXS` 
+This project powered by `Angular` version 13.0.1, `RxJS` version 7.4.0,  `Angular Material` version 14.2.4, `NGXS` version 3.7.5 
 
 # Who to run this Project?
 - Run `npm install` or `yarn install` in your command line 
